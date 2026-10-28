@@ -44,3 +44,11 @@ Rebuilds "all transfers out of treasury X on date D" from a public RPC alone: bi
 python treasury_audit.py --rpc https://bsc.publicnode.com \
   --token 0xTOKEN --wallet 0xWALLET --date 2026-10-27 --decimals 18 --tz-offset -5
 ```
+
+## doc_audit.py — API docs vs live behavior
+
+Reads an OpenAPI spec, probes every parameter-free GET route, reports which documented endpoints are dead (404), erroring, or alive — the core of a doc-vs-behavior API audit.
+
+```
+python doc_audit.py --spec https://api.example.com/openapi.json --base https://api.example.com
+```
