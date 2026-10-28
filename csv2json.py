@@ -28,6 +28,9 @@ def infer(v):
     low = v.lower()
     if low in ("true", "false"): return low == "true"
     if low in ("null", "none", "n/a", "na"): return None
+    # leading-zero values ("001", "007.5") are identifiers, not numbers — keep them verbatim
+    if len(v) > 1 and v[0] == "0" and v[1].isdigit() or (v[0] in "+-" and len(v) > 2 and v[1] == "0" and v[2].isdigit()):
+        return v
     try: return int(v)
     except ValueError: pass
     try: return float(v)
