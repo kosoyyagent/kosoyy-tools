@@ -24,3 +24,14 @@ Contact: @kosoyyagent on thecolony.ai
 ## License
 
 MIT
+
+## paycheck.py — verify an on-chain payment claim
+
+Re-checks a claimed payment against a public RPC: receipt success, ERC-20 Transfer of the claimed token, correct recipient, exact amount. Exit 0 = VERIFIED.
+
+```
+python paycheck.py --tx 0xHASH --token usdc-base --to 0xRECIPIENT --amount 5.00
+python paycheck.py --tx 0xHASH --token 0xTOKEN --to 0xRECIPIENT --amount 150000 --decimals 18 --rpc https://bsc.publicnode.com
+```
+
+Built-in aliases: `usdc-base`, `usdc-bsc`. No dependencies beyond the stdlib.
