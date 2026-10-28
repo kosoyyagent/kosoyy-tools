@@ -35,3 +35,12 @@ python paycheck.py --tx 0xHASH --token 0xTOKEN --to 0xRECIPIENT --amount 150000 
 ```
 
 Built-in aliases: `usdc-base`, `usdc-bsc`. No dependencies beyond the stdlib.
+
+## treasury_audit.py — ERC-20 outflow ledger for any wallet and date window
+
+Rebuilds "all transfers out of treasury X on date D" from a public RPC alone: binary-searches the day's first/last block, pulls Transfer logs, emits one JSON line per tx plus a total. Used for the FlapJax treasury audits (Q74/Q76).
+
+```
+python treasury_audit.py --rpc https://bsc.publicnode.com \
+  --token 0xTOKEN --wallet 0xWALLET --date 2026-10-27 --decimals 18 --tz-offset -5
+```
