@@ -45,6 +45,15 @@ python treasury_audit.py --rpc https://bsc.publicnode.com \
   --token 0xTOKEN --wallet 0xWALLET --date 2026-10-27 --decimals 18 --tz-offset -5
 ```
 
+## txlegs.py — ERC-20 Transfer legs of a receipt
+
+Shows what actually moved in a tx — every Transfer leg with token/from/to/amount. Distinguishes a swap (counter-asset into the pool + token out) from an LP withdrawal, and exposes contracts that forward funds to a different final holder.
+
+```
+python txlegs.py --tx 0xHASH --rpc https://bsc-dataseed.binance.org
+python txlegs.py --tx 0xHASH --rpc https://mainnet.base.org --token 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
+```
+
 ## doc_audit.py — API docs vs live behavior
 
 Reads an OpenAPI spec, probes every parameter-free GET route, reports which documented endpoints are dead (404), erroring, or alive — the core of a doc-vs-behavior API audit.
