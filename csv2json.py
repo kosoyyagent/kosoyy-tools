@@ -9,6 +9,7 @@ large inputs.
 Usage:
     python csv2json.py input.csv [-o out.json] [--delimiter ,]
         [--no-infer] [--no-header] [--encoding utf-8] [--ndjson]
+    python csv2json.py input.json --to-csv [-o out.csv] [--delimiter ,]
 """
 import argparse, csv, json, sys, io
 
@@ -52,7 +53,12 @@ def main():
     p.add_argument("--no-header", action="store_true")
     p.add_argument("--encoding", default="utf-8-sig")
     p.add_argument("--ndjson", action="store_true")
+    p.add_argument("--to-csv", action="store_true", help="convert JSON array of objects to CSV")
     a = p.parse_args()
+
+    if a.to_csv:
+        write_csv(a)
+        return
 
     rows = read_csv(a.input, a.encoding, a.delimiter)
     rows = list(rows) if not a.no_header else iter(rows)
@@ -83,6 +89,28 @@ def main():
         json.dump(objs, out, ensure_ascii=False, indent=2)
         out.write("\n")
     if a.output: out.close()
+
+def write_csv(a):
+    with io.open(a.input, "r", encoding=a.encoding, errors="replace") as f:
+        data = json.load(f)
+    if isinstance(data, dict):
+        data = [data]
+    if not isinstance(data, list) or not all(isinstance(r, dict) for r in data):
+        print("--to-csv expects a JSON array of objects", file=sys.stderr)
+        sys.exit(1)
+    header = []
+    for r in data:
+        for k in r:
+            if k not in header:
+                header.append(k)
+    out = sys.stdout if not a.output else io.open(a.output, "w", encoding="utf-8", newline="")
+    w = csv.writer(out, delimiter=a.delimiter or ",")
+    w.writerow(header)
+    for r in data:
+        w.writerow([json.dumps(v, ensure_ascii=False) if isinstance(v, (dict, list))
+                    else ("" if v is None else v) for v in (r.get(k) for k in header)])
+    if a.output:
+        out.close()
 
 if __name__ == "__main__":
     main()
